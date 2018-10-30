@@ -9,11 +9,15 @@ class App extends Component {
     super();
     this.state = {
         memes: [],
-        favorites: []
+        favorites: [],
+        time: [],
+        quote: []
+
     }
     this.buttonClicked = this.buttonClicked.bind(this)
-   
     this.deleteFav = this.deleteFav.bind(this)
+    this.datetimeApi = this.datetimeApi.bind(this)
+    this.quoteApi = this.quoteApi.bind(this)
   }
   
   componentDidMount(){
@@ -41,6 +45,20 @@ class App extends Component {
         })
     })
   }
+  datetimeApi(){
+    axios.get('http://worldclockapi.com/api/json/est/now').then(results => {
+      this.setState({
+        time: results.data.currentDateTime
+      })
+    })
+  }
+  quoteApi(){
+    axios.get('https://talaikis.com/api/quotes/random/').then(results => {
+      this.setState({
+        quote: results.data.quote
+      })
+    })
+  }
   
 
   render() {
@@ -57,6 +75,15 @@ class App extends Component {
     return (
       <div className="App">
         <h1 className="meme-h1">Memes</h1>
+        <div className="time">
+          {this.state.time}
+          <button className="button-chea" onClick={this.datetimeApi}>Date and Time</button>
+        </div>
+        <div className="quote">
+          {this.state.quote}
+        </div>
+        <button className="button-chea" onClick={this.quoteApi}>Quotes</button>
+        
         <div>
           {this.state.memes.map(meme => {
             
@@ -73,7 +100,7 @@ class App extends Component {
         </div> 
         <div>
             <h1 className="fav-title">
-                My Favorite Memes
+                Favorite Memes
             </h1>
             <Update/>
             {/* <h2 className="fav-name">Austin's <button className="update-button">Update</button></h2> */}
